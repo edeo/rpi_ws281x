@@ -24,11 +24,8 @@ import pandas as pd
 count =0
 
 while(count<1000):
-   y = requests.get("https://api.wmata.com/TrainPositions/TrainPositions?contentType=json&api_key=bce6ec600e2342f28bc7751435ac0f52" )
-   x = y.json()
-   z = pd.DataFrame(x['TrainPositions'])
-   gr = z[z['LineCode'] =='GR']
-   routes = requests.get("https://api.wmata.com/TrainPositions/StandardRoutes?contentType=json&api_key=bce6ec600e2342f28bc7751435ac0f52")
+  
+   routes = requests.get("https://api.wmata.com/TrainPositions/StandardRoutes?contentType=json&api_key=key")
    rt = routes.json()
    gnrt = pd.DataFrame(rt['StandardRoutes'][1]['TrackCircuits'])
    led = pd.read_csv('led.csv')
