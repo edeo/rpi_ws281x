@@ -11,7 +11,7 @@ def isNaN(num):
          return num != num
 
 # LED strip configuration:
-LED_COUNT      = 30      # Number of LED pixels.
+LED_COUNT      = 90      # Number of LED pixels.
 LED_PIN        = 18      # GPIO pin connected to the pixels (must support PWM!).
 LED_FREQ_HZ    = 800000  # LED signal frequency in hertz (usually 800khz)
 LED_DMA        = 5       # DMA channel to use for generating signal (try 5)
@@ -25,11 +25,16 @@ count =0
 
 while(count<1000):
   
-   routes = requests.get("https://api.wmata.com/TrainPositions/StandardRoutes?contentType=json&api_key=key")
+   routes = requests.get("https://api.wmata.com/TrainPositions/StandardRoutes?contentType=json&api_key=52717d1780bb4f328e26c0d48d8094bb")
    rt = routes.json()
    gnrt = pd.DataFrame(rt['StandardRoutes'][1]['TrackCircuits'])
    led = pd.read_csv('led.csv')
-   rt_led = pd.merge(left=gnrt,right=led, how='left', left_on='SeqNum',right_on='SeqNum')
+   gnrt['SeqNum'] = gnrt['SeqNum'].astype(int)
+   rt_led = pd.merge(left=gnrt,right=led, how='left', left_on='SeqNum',right_on='SeqNum') 
+   y  = requests.get("https://api.wmata.com/TrainPositions/TrainPositions?contentType=json&api_key=b160c7704c5a4eb5957627b61dc475c5" )
+   x  = y.json()
+   z  = pd.DataFrame(x['TrainPositions'])
+   gr = z[z['LineCode'] =='GR']   
    train_locations =  pd.merge(left=gr,right=rt_led,how='left',left_on='CircuitId',right_on='CircuitId')
    df = train_locations
    df1 = df[(df.DirectionNum  == 1)]
@@ -45,6 +50,7 @@ while(count<1000):
        else:
            strip.setPixelColor(int(x),16711680)
            strip.show()
+
    print(df1)
    count = count + 1
    time.sleep(3)
