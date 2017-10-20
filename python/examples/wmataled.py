@@ -25,13 +25,13 @@ count =0
 
 while(count<1000):
   
-   routes = requests.get("https://api.wmata.com/TrainPositions/StandardRoutes?contentType=json&api_key=52717d1780bb4f328e26c0d48d8094bb")
+   routes = requests.get("https://api.wmata.com/TrainPositions/StandardRoutes?contentType=json&api_key=")
    rt = routes.json()
    gnrt = pd.DataFrame(rt['StandardRoutes'][1]['TrackCircuits'])
    led = pd.read_csv('led.csv')
    gnrt['SeqNum'] = gnrt['SeqNum'].astype(int)
    rt_led = pd.merge(left=gnrt,right=led, how='left', left_on='SeqNum',right_on='SeqNum') 
-   y  = requests.get("https://api.wmata.com/TrainPositions/TrainPositions?contentType=json&api_key=b160c7704c5a4eb5957627b61dc475c5" )
+   y  = requests.get("https://api.wmata.com/TrainPositions/TrainPositions?contentType=json&api_key=" )
    x  = y.json()
    z  = pd.DataFrame(x['TrainPositions'])
    gr = z[z['LineCode'] =='GR']   
